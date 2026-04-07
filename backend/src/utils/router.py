@@ -22,7 +22,13 @@ class Router:
 
     def dispatch(self, event: dict, context: dict):
         method = event.get("requestContext", {}).get("http", {}).get("method", "")
-        raw_path = event.get("requestContext", {}).get("http", {}).get("path", "")
+        raw_path = (
+            event.get("rawPath")
+            or event.get("requestContext", {}).get("http", {}).get("path", "")
+            or event.get("path", "")
+        )
+        if raw_path != "/" and raw_path.endswith("/"):
+            raw_path = raw_path.rstrip("/")
 
         if method == "OPTIONS":
             return json_response(200, {"ok": True})
