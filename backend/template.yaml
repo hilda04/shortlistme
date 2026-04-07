@@ -60,66 +60,38 @@ Resources:
         - S3CrudPolicy:
             BucketName: !Ref ArtifactsBucket
       Events:
+        RouterRoot:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShortlistMeApi
+            Path: /
+            Method: ANY
+            Auth:
+              Authorizer: CognitoJwtAuthorizer
+        RouterProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShortlistMeApi
+            Path: /{proxy+}
+            Method: ANY
+            Auth:
+              Authorizer: CognitoJwtAuthorizer
         Health:
           Type: HttpApi
           Properties:
             ApiId: !Ref ShortlistMeApi
             Path: /health
             Method: GET
+            Auth:
+              Authorizer: NONE
         Roles:
           Type: HttpApi
           Properties:
             ApiId: !Ref ShortlistMeApi
             Path: /roles
             Method: GET
-        Me:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /me
-            Method: GET
             Auth:
-              Authorizer: CognitoJwtAuthorizer
-        UploadPresign:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /uploads/presign
-            Method: POST
-            Auth:
-              Authorizer: CognitoJwtAuthorizer
-        CreateAnalysis:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /analyses
-            Method: POST
-            Auth:
-              Authorizer: CognitoJwtAuthorizer
-        ListAnalyses:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /analyses
-            Method: GET
-            Auth:
-              Authorizer: CognitoJwtAuthorizer
-        GetAnalysis:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /analyses/{analysisId}
-            Method: GET
-            Auth:
-              Authorizer: CognitoJwtAuthorizer
-        DownloadAnalysis:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref ShortlistMeApi
-            Path: /analyses/{analysisId}/download/{type}
-            Method: GET
-            Auth:
-              Authorizer: CognitoJwtAuthorizer
+              Authorizer: NONE
 
   AnalysesTable:
     Type: AWS::DynamoDB::Table
