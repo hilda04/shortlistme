@@ -1,0 +1,1 @@
+Provide a strict 10-second recruiter review. Include first impression, likely concerns, and shortlist recommendation.
